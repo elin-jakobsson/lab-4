@@ -1,97 +1,135 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!--Meta Data-->
-    <meta charset="utf-8">
-    <title>Lab 4</title>
-    <!--Bootstrap-->
-    <!--Css Egen-->
-    <style>
-     .container div{
-       display: block;
-       background-color: white;
-     }
-    </style>
-    <!--Script-->
-    <script type="text/javascript">
-      window.addEventListener("load", function(event){
-        //function for button Request API key
-        let btnKey = document.getElementById('requestKey');
-        let key = document.getElementById('key');
-        let urlAPI= "https://www.forverkliga.se/JavaScript/api/crud.php?requestKey";
 
-        //function for button Add data
-        let titleAdd = document.getElementById("addTitle");
-        let authorAdd = document.getElementById("addAuthor");
-        let btnAdd = document.getElementById('addBook');
-        let keyAdd = key.value;
-        let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert";// + "&key="+ keyAdd +  "&title=" + titleAdd.value + "&author=" + authorAdd.value;
+<head>
+  <!--Meta Data-->
+  <meta charset="utf-8">
+  <title>Lab 4</title>
+  <!--Bootstrap-->
+  <!--Css Egen-->
+  <style>
+    .container div {
+      display: block;
+      background-color: white;
+    }
+  </style>
+  <!--Script-->
+  <script type="text/javascript">
+    window.addEventListener("load", function(event) {
+      //variables for Request Key
+      let requestKey = document.getElementById('requestKey');
+      let keyText = document.getElementById('keyText');
+      let urlRec = "https://www.forverkliga.se/JavaScript/api/crud.php?requestKey";
+      //variables for Add data, View data
+      let titleAdd = document.getElementById("addTitle");
+      let authorAdd = document.getElementById("addAuthor");
+      let btnAdd = document.getElementById('addBook');
+      let bookList = document.getElementById('bookList')
+      let keyAdd;
+      let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert"; // + "&key="+ keyAdd +  "&title=" + titleAdd.value + "&author=" + authorAdd.value;
 
-        btnKey.addEventListener("click", function(event){
-          fetch(urlAPI)
-          .then(function(response){
-            return response.json();
-          }).then(function(dataKey){
-            key.value = dataKey.key;
+      //function for button Request API key
+      requestKey.addEventListener("click", function(event) {
+        fetch(urlRec)
+          .then(function(response) {
+            return response.json()
+          }).then(function(dataKey) {
+            keyText.value = dataKey.key;
             console.log(dataKey.key);
-            keyAdd = key.value;
+            keyAdd = keyText.value;
           })
       });
       //function for button Add data
-      btnAdd.addEventListener("click", function(event){
-        fetch(urlAdd)
-        .then(function(response){
-          return response.json();
-        }).then(function(answer){
-          urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key="+ keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
-          console.log(urlAdd);
-          console.log(answer.status);
-        })
-      })
+      btnAdd.addEventListener("click", function(event) {
+           fetch(urlAdd)
+          .then(
+            function(response) {
+              if(response.status !== 200){
+                console.log('Looks like there was a problem. Status Code: ' +
+                  response.status);
+                return;
+              }
+              else {
+                return response.json();
+              }
+          })
+          .then(
+            function(answer) {
+                urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
+                console.log(urlAdd);
+                console.log(answer.status);
+
+                let newBook = document.createElement('li');
+                newBook.id = answer.id;
+                newBook.innerHTML = 'Title: '+ titleAdd.value + ' author: ' + authorAdd.value + ' id: ' + newBook.id;
+                bookList.appendChild(newBook);
+            })
       });
-    </script>
-  </head>
-  <body>
-    <!--HEADER-->
-    <header>
-      <h1>Lab 4 by Elin &amp; Anna</h1>
-    </header>
-    <!--MAIN-->
-    <main>
-      <div class="container">
-        <div class="requestDiv">
-          <button id="requestKey"type="button" name="button">Request API key</button>
-          <p>Received: <input id="key" type="text" name="placeForKey" placeholder="Your Key... " value=""/></p>
-        </div>
-        <div class="addDiv">
-          <button id='addBook' type="button" name="button">Add Book</button>
-          <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
-          <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value=""/>
-        </div>
-        <div class="viewDiv">
-          <ul id="bookList">
-            <li>Book 1</li>
-            <li>Book 2</li>
-          </ul>
-        </div>
-        <div class="changeDiv">
-          <button id="changeBook" type="button" name="button">Change Book</button>
-          <input type="number" name="bookId" placeholder="Book id" value="">
-          <input type="text" name="changeTitle" placeholder="Title" value="">
-          <input type="text" name="changeAuthor" placeholder="Author" value="">
-        </div>
-        <div class="deleteDiv">
-          <button id="deleteBtn"type="button" name="button">Delete Book</button>
-          <input type="text" name="" placeholder="Book id" value="">
-        </div>
 
+     /*fetch('./api/some.json')
+  .then(
+    function(response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Examine the text in the response
+      response.json().then(function(data) {
+        console.log(data);
+      });
+    }
+  )
+  .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+  });*/
+
+
+    });
+  </script>
+</head>
+
+<body>
+  <!--HEADER-->
+  <header>
+    <h1>Lab 4 by Elin &amp; Anna</h1>
+  </header>
+  <!--MAIN-->
+  <main>
+    <div class="container">
+      <div class="requestDiv">
+        <button id="requestKey" type="button" name="button">Request API key</button>
+        <p>Received: <input id="keyText" type="text" name="placeForKey" placeholder="Your Key... " value="" /></p>
       </div>
-    </main>
+      <div class="addDiv">
+        <button id='addBook' type="button" name="button">Add Book</button>
+        <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
+        <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value="" />
+      </div>
+      <div class="viewDiv">
+        <ul id="bookList">
+        </ul>
+      </div>
+      <div class="changeDiv">
+        <button id="changeBook" type="button" name="button">Change Book</button>
+        <input type="number" name="bookId" placeholder="Book id" value="">
+        <input type="text" name="changeTitle" placeholder="Title" value="">
+        <input type="text" name="changeAuthor" placeholder="Author" value="">
+      </div>
+      <div class="deleteDiv">
+        <button id="deleteBtn" type="button" name="button">Delete Book</button>
+        <input type="text" name="" placeholder="Book id" value="">
+      </div>
 
-    <!--FOOTER-->
-    <footer>
+    </div>
+  </main>
 
-    </footer>
+  <!--FOOTER-->
+  <footer>
 
-  </body>
+  </footer>
+
+</body>
+
 </html>
