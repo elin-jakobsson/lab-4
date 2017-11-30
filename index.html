@@ -8,84 +8,95 @@
   <!--Bootstrap-->
   <!--Css Egen-->
   <style>
-    .container div {
-      display: block;
-      background-color: white;
+/*  *{
+    margin: 0;
+    padding:0;
+
+  }
+   header{
+     height: 20vh;
+     width: 100vw;
+     background-color: powderBlue;
+     text-align: center;
+     font-family: monospace;
+   }
+   header>h1{
+     position: relative;
+     left: 50%;
+     top: 50%;
+     transform: translate(-50%,-50%);
+   }
+    body{
+      background-color: #f4f4f4;
     }
+    .container div, .container button{
+      display: block;
+      margin: 10px;
+      padding:5px;
+      left: 30px;
+    }*/
   </style>
   <!--Script-->
   <script type="text/javascript">
     window.addEventListener("load", function(event) {
-      //variables for Request Key
-      let requestKey = document.getElementById('requestKey');
-      let keyText = document.getElementById('keyText');
-      let urlRec = "https://www.forverkliga.se/JavaScript/api/crud.php?requestKey";
+
       //variables for Add data, View data
       let titleAdd = document.getElementById("addTitle");
       let authorAdd = document.getElementById("addAuthor");
-      let btnAdd = document.getElementById('addBook');
-      let bookList = document.getElementById('bookList')
+
       let keyAdd;
-      let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert"; // + "&key="+ keyAdd +  "&title=" + titleAdd.value + "&author=" + authorAdd.value;
 
-      //function for button Request API key
-      requestKey.addEventListener("click", function(event) {
-        fetch(urlRec)
-          .then(function(response) {
-            return response.json()
-          }).then(function(dataKey) {
-            keyText.value = dataKey.key;
-            console.log(dataKey.key);
-            keyAdd = keyText.value;
-          })
-      });
-      //function for button Add data
-      btnAdd.addEventListener("click", function(event) {
-           fetch(urlAdd)
-          .then(
-            function(response) {
-              if(response.status !== 200){
-                console.log('Looks like there was a problem. Status Code: ' +
-                  response.status);
-                return;
-              }
-              else {
-                return response.json();
-              }
-          })
-          .then(
-            function(answer) {
-                urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
-                console.log(urlAdd);
-                console.log(answer.status);
+      document.getElementById('requestKey').addEventListener("click", getKey);
+      document.getElementById('addBook').addEventListener('click', addBook);
+      document.getElementById("viewBtn").addEventListener("click", viewBook);
 
-                let newBook = document.createElement('li');
-                newBook.id = answer.id;
-                newBook.innerHTML = 'Title: '+ titleAdd.value + ' author: ' + authorAdd.value + ' id: ' + newBook.id;
-                bookList.appendChild(newBook);
-            })
-      });
 
-     /*fetch('./api/some.json')
-  .then(
-    function(response) {
-      if (response.status !== 200) {
-        console.log('Looks like there was a problem. Status Code: ' +
-          response.status);
-        return;
+      function getKey(){
+        fetch("https://www.forverkliga.se/JavaScript/api/crud.php?requestKey")
+          .then((response) => response.json())
+          .then((dataKey) => {
+            document.getElementById('keyText').value = dataKey.key;
+            keyAdd = dataKey.key;
+          }).catch((error) => console.log(error))
       }
+        function addBook(){
+          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
+          fetch(url)
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.status !== "error") {
+                /*document.querySelector('label').innerHTML = 'Saved';*/
+                console.log('succees');
+              }else{
+                alert("Sorry, please try again");
+              }
+          }).catch(function(error) {
+               console.log(error);
+            })
+        }
+        function  viewBook(){
+          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=select" + "&key=" + keyAdd;
+          fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            let bookList = [];
+            bookList.push(data);
+            console.log(data);
+            console.log(data.data.id);
 
-      // Examine the text in the response
-      response.json().then(function(data) {
-        console.log(data);
-      });
-    }
-  )
-  .catch(function(err) {
-    console.log('Fetch Error :-S', err);
-  });*/
-
-
+            let output = '<h2> Book and ID: ' + data.id + '</h2>';
+            bookList.forEach(function(book){
+              output += `<ul>
+              <li> Title: ${book.title}</li>
+              <li> Author: ${book.author}</li>
+              <li> #ID : ${book.id}</li>
+              <li> Updated : ${book.updated}</li>
+              </ul>
+              `;
+            });
+            document.getElementById('viewDiv').innerHTML += '<div>' + output + '</div>';
+          }).catch((error)=> console.log(error))
+        }
     });
   </script>
 </head>
@@ -104,12 +115,13 @@
       </div>
       <div class="addDiv">
         <button id='addBook' type="button" name="button">Add Book</button>
+      <!--  <label for="addBook"></label> -->
         <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
         <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value="" />
       </div>
-      <div class="viewDiv">
-        <ul id="bookList">
-        </ul>
+      <button id="viewBtn" type="button" name="button">View Books</button>
+      <div id="viewDiv">
+
       </div>
       <div class="changeDiv">
         <button id="changeBook" type="button" name="button">Change Book</button>
