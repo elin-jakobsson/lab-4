@@ -6,97 +6,228 @@
   <meta charset="utf-8">
   <title>Lab 4</title>
   <!--Bootstrap-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!--FONT Awsome-->
+  <link href="resources/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet">
   <!--Css Egen-->
   <style>
-/*  *{
-    margin: 0;
-    padding:0;
+    * {
+      margin: 0;
+      padding: 0;
 
-  }
-   header{
-     height: 20vh;
-     width: 100vw;
-     background-color: powderBlue;
-     text-align: center;
-     font-family: monospace;
-   }
-   header>h1{
-     position: relative;
-     left: 50%;
-     top: 50%;
-     transform: translate(-50%,-50%);
-   }
-    body{
-      background-color: #f4f4f4;
     }
-    .container div, .container button{
+
+    header {
+      height: 20vh;
+      width: 100vw;
+      background-color: powderBlue;
+      text-align: center;
+      font-family: monospace;
+    }
+
+    header>h1 {
+      position: relative;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    body {
+      background-color: #f4f4f4;
+      margin: auto;
+    }
+
+    .container div,
+    .container>button {
       display: block;
       margin: 10px;
-      padding:5px;
+      padding: 5px;
       left: 30px;
-    }*/
+
+    }
+    #viewDiv > div{
+      background-color: white;
+      border-radius: 10px;
+      margin: 5px 0;
+      padding:10px;
+
+    }
+
+    #viewDiv ul{
+      list-style: none;
+    }
+    .changeDiv{
+     text-align: right;
+      margin: 10px;
+    }
+    .error{
+
+      max-height: 200px;
+      width: 100%;
+      bottom: 0px;
+
+      overflow: auto;
+      background-color: lime;
+      padding: 30px;
+      border-radius: 10px;
+    }
   </style>
   <!--Script-->
   <script type="text/javascript">
     window.addEventListener("load", function(event) {
 
-      //variables for Add data, View data
       let titleAdd = document.getElementById("addTitle");
       let authorAdd = document.getElementById("addAuthor");
-
       let keyAdd;
+      var errorMessage = document.getElementsByClassName('error')[0];
+      var fails = 0;
+      let id = document.getElementById("id");
+
 
       document.getElementById('requestKey').addEventListener("click", getKey);
-      document.getElementById('addBook').addEventListener('click', addBook);
-      document.getElementById("viewBtn").addEventListener("click", viewBook);
+      document.getElementById('addBook').addEventListener('click', (event) => addBook());
+      document.getElementById("viewBtn").addEventListener("click", (event)=> viewBook());
+    //  document.getElementById("deleteBtn").addEventListener("click", deleteBook);
 
 
-      function getKey(){
+      function getKey() {
         fetch("https://www.forverkliga.se/JavaScript/api/crud.php?requestKey")
           .then((response) => response.json())
           .then((dataKey) => {
-            document.getElementById('keyText').value = dataKey.key;
+            document.getElementById('keyText').innerHTML = dataKey.key;
             keyAdd = dataKey.key;
           }).catch((error) => console.log(error))
       }
-        function addBook(){
+
+
+
+      function addBook(num = 0) {
+        console.log('addBook ' + num);
+        let exe = function(success, fail) {
           let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
           fetch(url)
-          .then((response) => response.json())
-          .then((result) => {
-            if (result.status !== "error") {
-                /*document.querySelector('label').innerHTML = 'Saved';*/
-                console.log('succees');
-              }else{
-                alert("Sorry, please try again");
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.status === "error") {
+                fail(result);
+              } else {
+                success(result);
               }
-          }).catch(function(error) {
-               console.log(error);
             })
-        }
-        function  viewBook(){
+        };
+        let promise = new Promise(exe);
+        promise.then(function(success) {
+          console.log(success.id);
+          id.innerHTML += "<br>" + success.id;
+
+        }, function(fail) {
+          console.log(fail);
+          fails += 1;
+          failMessage = ` <p> API-fetch fail Nr: ${fails} - message: ${fail.message}</p> `
+          errorMessage.innerHTML += failMessage;
+
+          if (num < 10) {
+            console.log(num);
+            addBook(num + 1);
+          }
+          else {
+            alert(fail.message);
+          }
+
+        }).catch(function(error) {
+          console.log(error);
+        })
+      }
+
+
+      function viewBook(num = 0) {
+        let exe = function(success, fail) {
           let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=select" + "&key=" + keyAdd;
           fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            let bookList = [];
-            bookList.push(data);
-            console.log(data);
-            console.log(data.data.id);
-
-            let output = '<h2> Book and ID: ' + data.id + '</h2>';
-            bookList.forEach(function(book){
-              output += `<ul>
-              <li> Title: ${book.title}</li>
-              <li> Author: ${book.author}</li>
-              <li> #ID : ${book.id}</li>
-              <li> Updated : ${book.updated}</li>
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.status !== "success") {
+                fail(result);
+              } else {
+                success(result);
+              }
+            })
+        };
+        let promise = new Promise(exe);
+        promise.then(function(success) {
+          console.log(success);
+          let output = "";
+          success.data.forEach(function(book) {
+            output +=
+              `<div>
+              <h2><span>${book.title}</span></h2>
+              <ul>
+                <li> Author: <span> ${book.author}</span></li>
+                <li> Book ID: <span>${book.id}</span></li>
+                <li> Updated: <span>${book.updated}</span></li>
               </ul>
-              `;
-            });
-            document.getElementById('viewDiv').innerHTML += '<div>' + output + '</div>';
-          }).catch((error)=> console.log(error))
-        }
+              <div class="changeDiv">
+                <button id="changeBook" class="btn btn-warning" type="button" name="button">Change Book</button>
+                <button id="deleteBtn" class="btn btn-danger" type="button" name="button">Delete  <i class="fa fa-trash" aria-hidden="true"></i>  </button>
+              </div>
+              </div>
+            `;
+          });
+          document.getElementById('viewDiv').innerHTML = output;
+
+        }, function(fail) {
+          console.log(fail);
+          fails += 1;
+          failMessage = ` <p> API-fetch fail Nr: ${fails} - message: ${fail.message}</p> `
+          errorMessage.innerHTML += failMessage;
+          if (num < 10) {
+            viewBook(num + 1);
+          }else {
+            alert('An Error occurd, Please try again');
+          }
+        }).catch(function(error) {
+          console.log(error);
+        })
+      };
+
+      function changeBook (){
+        let exe = function(success, fail) {
+          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=update" + "&key=" + keyAdd + "&id=" + id + "&title=" + titleNew + "&author" + authorNew;
+          fetch(url)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.status !== "success") {
+                fail(result);
+              } else {
+                success(result);
+              }
+            })
+        };
+      };
+
+
+      function deleteBook (){
+        let urlDelete = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + id;
+        console.log(urlDelete);
+        let exe = function(success, fail) {
+          for(var i = 0; i < 20; i++){
+            if(true){
+              document.getElementById("deleteInput").value === id;
+            }
+          }
+          fetch(urlDelete)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.status !== "success") {
+                fail(result);
+              } else {
+                success(result);
+              }
+            })
+        };
+      };
+
+
     });
   </script>
 </head>
@@ -110,30 +241,26 @@
   <main>
     <div class="container">
       <div class="requestDiv">
-        <button id="requestKey" type="button" name="button">Request API key</button>
-        <p>Received: <input id="keyText" type="text" name="placeForKey" placeholder="Your Key... " value="" /></p>
+        <button  id="requestKey"class="btn btn-secondary" type="button" name="button">Request API key</button>
+        <p>Received: <strong id="keyText"></strong></p>
       </div>
       <div class="addDiv">
-        <button id='addBook' type="button" name="button">Add Book</button>
-      <!--  <label for="addBook"></label> -->
+        <button id='addBook'class="btn btn-primary" type="button" name="button">Add Book</button>
+        <!--  <label for="addBook"></label> -->
         <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
         <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value="" />
       </div>
-      <button id="viewBtn" type="button" name="button">View Books</button>
+      <div>
+        <button id="viewBtn" class="btn btn-success" type="button" name="button">View Books</button>
+      </div>
       <div id="viewDiv">
 
       </div>
-      <div class="changeDiv">
-        <button id="changeBook" type="button" name="button">Change Book</button>
-        <input type="number" name="bookId" placeholder="Book id" value="">
-        <input type="text" name="changeTitle" placeholder="Title" value="">
-        <input type="text" name="changeAuthor" placeholder="Author" value="">
-      </div>
-      <div class="deleteDiv">
-        <button id="deleteBtn" type="button" name="button">Delete Book</button>
-        <input type="text" name="" placeholder="Book id" value="">
-      </div>
+      <div id="id">Vad finns här</div>
 
+      <div class="error">
+        <h5 class="error-message">API Fetch - Information </h5>
+      </div>
     </div>
   </main>
 
