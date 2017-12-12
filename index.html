@@ -47,6 +47,23 @@
     }
     #output{
     cursor: pointer;
+
+    width: 100%
+  }
+  .bookEx{
+    float: left;
+    display: inline-block;
+    text-align: center;
+    width: 30%;
+
+    margin: 10px;
+    background-color: white;
+    border-radius: 10px;
+  }
+
+  .bookEx>*{
+
+    list-style-type: none;
   }
 
     #viewDiv.hidden {
@@ -95,6 +112,7 @@
           let button = document.getElementById("addGoogleBtn");
           let input = document.getElementById("input");
           let output = document.getElementById("output");
+          let bookTest;
           button.addEventListener("click", function(event) {
             let url = "https://www.googleapis.com/books/v1/volumes?q=" + input.value;
             console.log(url);
@@ -102,11 +120,20 @@
               .then(function(response) {
                 return response.json()
               }).then(function(json) {
-                googleBooksList = json.items;
-                for (var i = 0; i < 3; i++){
+                console.log(json);
+                bookTest = '';
+                //googleBooksList = json.items;
+                for (var i = 0; i < json.items.length; i++){
 
-                  output.innerHTML += ` <div class="googleIsGreat"> <li> Title: <span>${json.items[i].volumeInfo.title}</span> <br> Author: <span> ${json.items[i].volumeInfo.authors} </span></li> </div>`;
+                  bookTest += `<button class="bookEx">
+                  <ul>
+                  <li> <img src=${json.items[i].volumeInfo.imageLinks.thumbnail} alt="img not found"> </li>
+                  <li> Title: <span>${json.items[i].volumeInfo.title}</span> </li>
+                  <li> Author: <span> ${json.items[i].volumeInfo.authors} </span></li>
+                  </ul>
+                  </button>`;
                 }
+                output.innerHTML = bookTest;
               });
             })
             /*  let searchTitle = document.getElementById('searchTitle');
@@ -426,8 +453,8 @@
         <input id="input" type="text" placeholder="Search for a book title" value=""/>
         <button id="addGoogleBtn" class="btn btn-primary" type="button" name="button" ><i class="fa fa-search" aria-hidden="true"></i></button>
         <br/>
-        <ul id="output" title="Add to the list">
-        </ul>
+        <div id="output" title="Add to the list">
+        </div>
       </div>
 
       <!--<div class="search">
@@ -447,8 +474,7 @@
       <div id="viewDiv" class="hidden">
 
       </div>
-      <div id="id">Vad finns här...
-      </div>
+
       <div class="error">
         <h5 class="error-message">API Fetch - Information </h5>
       </div>
