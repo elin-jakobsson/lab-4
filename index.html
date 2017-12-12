@@ -7,7 +7,7 @@
   <title>Lab 4</title>
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <!--FONT Awsome-->
+  <!--FONT Awsome-->
   <link href="resources/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet">
   <!--Css Egen-->
   <style>
@@ -45,22 +45,34 @@
       left: 30px;
 
     }
-    #viewDiv > div{
+
+    #viewDiv.hidden {
+      display: none;
+    }
+
+    #viewDiv.show {
+      display: block;
+    }
+
+    #viewDiv>div {
       background-color: white;
       border-radius: 10px;
+      width: 100%;
       margin: 5px 0;
-      padding:10px;
+      padding: 10px;
 
     }
 
-    #viewDiv ul{
+    #viewDiv ul {
       list-style: none;
     }
-    .changeDiv{
-     text-align: right;
+
+    .changeDiv {
+      text-align: right;
       margin: 10px;
     }
-    .error{
+
+    .error {
 
       max-height: 200px;
       width: 100%;
@@ -76,73 +88,83 @@
   <script type="text/javascript">
     window.addEventListener("load", function(event) {
 
-      let titleAdd = document.getElementById("addTitle");
-      let authorAdd = document.getElementById("addAuthor");
-      let keyAdd;
-      var errorMessage = document.getElementsByClassName('error')[0];
-      var fails = 0;
-      let id = document.getElementById("id");
+      //JavaScript for open library api
+    /*  let searchTitle = document.getElementById('searchTitle');
+      let searchAuthor = document.getElementById('searchAuthor');
+      searchTitle.addEventListener('change', function(event){
+        console.log(event.value);
+        let urlTitle = 'https://openlibrary.org/search.json?title=' + event.value;
+        getLibrary(urlTitle,titleSuccess);
+      })
 
 
-      document.getElementById('requestKey').addEventListener("click", getKey);
-      document.getElementById('addBook').addEventListener('click', (event) => addBook());
-      document.getElementById("viewBtn").addEventListener("click", (event)=> viewBook());
-    //  document.getElementById("deleteBtn").addEventListener("click", deleteBook);
-
-
-      function getKey() {
-        fetch("https://www.forverkliga.se/JavaScript/api/crud.php?requestKey")
-          .then((response) => response.json())
-          .then((dataKey) => {
-            document.getElementById('keyText').innerHTML = dataKey.key;
-            keyAdd = dataKey.key;
-          }).catch((error) => console.log(error))
-      }
-
-
-
-      function addBook(num = 0) {
-        console.log('addBook ' + num);
+      function getLibrary(url, callback, num = 0) {
         let exe = function(success, fail) {
-          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
           fetch(url)
             .then((response) => response.json())
             .then((result) => {
-              if (result.status === "error") {
-                fail(result);
-              } else {
+              if (result.docs) {
                 success(result);
+              } else {
+                  fail(result);
               }
             })
         };
         let promise = new Promise(exe);
         promise.then(function(success) {
-          console.log(success.id);
-          id.innerHTML += "<br>" + success.id;
-
+          console.log(success);
+          return success;
         }, function(fail) {
           console.log(fail);
-          fails += 1;
-          failMessage = ` <p> API-fetch fail Nr: ${fails} - message: ${fail.message}</p> `
-          errorMessage.innerHTML += failMessage;
-
           if (num < 10) {
-            console.log(num);
-            addBook(num + 1);
+            getLibrary(url, callback, num + 1);
+          } else {
+            alert(fail);
           }
-          else {
-            alert(fail.message);
+        }).then(function(obj) {
+          if (obj !== undefined) {
+            callback(obj);
           }
-
         }).catch(function(error) {
           console.log(error);
         })
       }
 
 
-      function viewBook(num = 0) {
+      function titleSuccess(event){
+
+        let title = event.docs.title_suggest;
+        console.log(title);
+        let author = event.docs.author_name;
+        console.log(title);
+        let isbnNr = event.docs.isbn;
+
+      //  getLibrary(imageUrl, function(event){
+          let image = document.createElement('img');
+          image.src = "http://covers.openlibrary.org/b/isbn/" + isbnNr + "-S.jpg?default=false";
+
+        document.getElementById('viewDiv').appendChild(image);
+
+      }*/
+
+// JavaScript for school api
+
+
+
+      let titleAdd = document.getElementById("addTitle");
+      let authorAdd = document.getElementById("addAuthor");
+      let errorMessage = document.getElementsByClassName('error')[0];
+      let viewDiv = document.getElementById('viewDiv');
+      let viewBtn = document.getElementById("viewBtn");
+      let fails = 0;
+
+      let keyAdd;
+      let bookId;
+      document.getElementById("viewBtn").disabled = true;
+      document.getElementById("addBook").disabled = true;
+
+      function getAjax(url, callback, num = 0) {
         let exe = function(success, fail) {
-          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=select" + "&key=" + keyAdd;
           fetch(url)
             .then((response) => response.json())
             .then((result) => {
@@ -156,43 +178,196 @@
         let promise = new Promise(exe);
         promise.then(function(success) {
           console.log(success);
-          let output = "";
-          success.data.forEach(function(book) {
-            output +=
-              `<div>
-              <h2><span>${book.title}</span></h2>
-              <ul>
-                <li> Author: <span> ${book.author}</span></li>
-                <li> Book ID: <span>${book.id}</span></li>
-                <li> Updated: <span>${book.updated}</span></li>
-              </ul>
-              <div class="changeDiv">
-                <button id="changeBook" class="btn btn-warning" type="button" name="button">Change Book</button>
-                <button id="deleteBtn" class="btn btn-danger" type="button" name="button">Delete  <i class="fa fa-trash" aria-hidden="true"></i>  </button>
-              </div>
-              </div>
-            `;
-          });
-          document.getElementById('viewDiv').innerHTML = output;
-
+          return success;
         }, function(fail) {
           console.log(fail);
           fails += 1;
           failMessage = ` <p> API-fetch fail Nr: ${fails} - message: ${fail.message}</p> `
           errorMessage.innerHTML += failMessage;
           if (num < 10) {
-            viewBook(num + 1);
-          }else {
-            alert('An Error occurd, Please try again');
+            console.log(num);
+            getAjax(url, callback, num + 1);
+          } else {
+            alert(fail.message);
+          }
+        }).then(function(obj) {
+          //console.log(obj);
+          if (obj !== undefined) {
+            callback(obj);
           }
         }).catch(function(error) {
           console.log(error);
         })
-      };
+      }
 
-      function changeBook (){
+
+      document.getElementById('requestKey').addEventListener("click", getKey);
+      document.getElementById('addBook').addEventListener('click', (event) => {
+        let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
+
+        getAjax(urlAdd, addBook);
+
+      });
+      viewBtn.addEventListener("click", (event) => {
+        if (viewDiv.className === 'hidden') {
+          viewDiv.setAttribute('class', 'show')
+          viewBtn.innerHTML = 'Show Booklist';
+        } else {
+          viewDiv.setAttribute('class', 'hidden')
+          viewBtn.innerHTML = 'Hide Booklist';
+        }
+
+      });
+
+
+      viewDiv.addEventListener('load', function(event) {
+
+
+        if (viewDiv.children.length > 0) {
+
+
+
+
+
+
+
+
+          //let changeBtn = document.getElementById('changeBook');
+          /*  viewDiv.children.addEventListener('click', function(event) {
+              console.log(viewDiv.children);
+
+              let spans = document.getElementsByClassName('spanToInput');
+              console.log(spans);
+              let inputValu = '';
+              for (var i = 0; i < spans.length; i++) {
+                span = spans[i];
+                let input = document.createElement('input');
+                input.className = 'testInput';
+                input.setAttribute('value', inputValu);
+                input.setAttribute('placeholder', span.innerText);
+                span.parentNode.replaceChild(input, span);
+              }
+              console.log(span);
+            });*/
+
+        } else {
+          console.log('viewDiv is empty');
+        }
+      });
+
+
+
+      /*var divs = document.getElementById("viewDiv").children;
+        for (var i = 0; i < divs.length; i++) {
+          divs[].addEventListener('click', (event)=>{
+            console.log(this.innerText);
+          })
+
+        }
+
+
+
+      })*/
+
+
+      function getKey() {
+        fetch("https://www.forverkliga.se/JavaScript/api/crud.php?requestKey")
+          .then((response) => response.json())
+          .then((dataKey) => {
+            document.getElementById('keyText').innerHTML = dataKey.key;
+            document.getElementById("addBook").disabled = false;
+            keyAdd = dataKey.key;
+          }).catch((error) => console.log(error))
+      }
+
+      function addBook(obj) {
+        console.log(obj);
+        document.getElementById("viewBtn").disabled = false;
+        bookId = obj.id;
+        let urlView = "https://www.forverkliga.se/JavaScript/api/crud.php?op=select" + "&key=" + keyAdd;
+        getAjax(urlView, addToList);
+      }
+
+
+
+      function addToList(obj, count = 0) {
+        console.log(obj);
+
+        let output = "";
+        document.getElementById('viewDiv').innerHTML = '';
+        obj.data.forEach((book) => {
+          output +=
+            `<div id="book-${book.id}">
+            <h2><span class='spanToInput'>${book.title}</span></h2>
+            <ul>
+              <li> Author: <span class='spanToInput'> ${book.author}</span></li>
+              <li> Book ID: <span>${book.id}</span></li>
+              <li> Updated: <span>${book.updated}</span></li>
+            </ul>
+            <div class="changeDiv">
+              <button id="changeBook" class="btn btn-warning" type="button" name="button">Change Book</button>
+              <button class="btn btn-danger deleteClass" type="button" name="button">Delete  <i class="fa fa-trash" aria-hidden="true"></i></button>
+            </div>
+            </div>
+          `;
+        })
+
+        document.getElementById('viewDiv').innerHTML = output;
+        console.log(output);
+        //document.querySelector('.changeDiv').appendChild(deleteBtn);
+
+
+        /*
+        let deleteList = document.getElementsByClassName('deleteClass')[count];
+          console.log('deleteList index nr' + count);
+          console.log(deleteList);
+        deleteList.addEventListener('click', function(event) {
+          let urlDelete = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + bookId;
+          let node = event.target.parentElement.parentElement;
+          let parent = document.getElementById('viewDiv');
+          console.log(node);
+          console.log(parent);
+          getAjax(urlDelete, function(obj) {
+            console.log('remove childe', obj);
+            if (obj.status === 'success') {
+              parent.removeChild(node);
+            }
+          });
+        });
+        count +=1;
+        console.log(count);
+        */
+
+        //let urlDelete = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + bookId;
+        //getAjax(urlDelete, deleteFunction)
+
+      }
+
+
+      function deleteFunction(obj) {
+        console.log(obj);
+
+        let deleteBtnList = document.getElementsByClassName('deleteClass');
+
+        for (var i = 0; i < deleteBtnList.length; i++) {
+          let deleteList = document.getElementsByClassName('deleteClass')[i];
+          console.log(deleteList);
+          deleteList.addEventListener("click", function() {
+            console.log("hej");
+          })
+        }
+      }
+
+
+
+      /*function changeBook() {
         let exe = function(success, fail) {
-          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=update" + "&key=" + keyAdd + "&id=" + id + "&title=" + titleNew + "&author" + authorNew;
+
+
+        };
+
+          let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=update" + "&key=" + keyAdd + "&id=" + book.id + "&title=" + book.title + "&author=" + book.author;
+
           fetch(url)
             .then((response) => response.json())
             .then((result) => {
@@ -203,29 +378,9 @@
               }
             })
         };
-      };
+      };*/
 
 
-      function deleteBook (){
-        let urlDelete = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + id;
-        console.log(urlDelete);
-        let exe = function(success, fail) {
-          for(var i = 0; i < 20; i++){
-            if(true){
-              document.getElementById("deleteInput").value === id;
-            }
-          }
-          fetch(urlDelete)
-            .then((response) => response.json())
-            .then((result) => {
-              if (result.status !== "success") {
-                fail(result);
-              } else {
-                success(result);
-              }
-            })
-        };
-      };
 
 
     });
@@ -241,23 +396,28 @@
   <main>
     <div class="container">
       <div class="requestDiv">
-        <button  id="requestKey"class="btn btn-secondary" type="button" name="button">Request API key</button>
+        <button id="requestKey" class="btn btn-secondary" type="button" name="button">Request API key</button>
         <p>Received: <strong id="keyText"></strong></p>
       </div>
+      <div class="search">
+        <input type="text" id="searchTitle" placeholder="Search title..">
+        <input type="text" id="searchAuthor" placeholder="Search author..">
+        <!--<button id="searchBtn" class="btn btn-primary" type="button" name="button">Search &nbsp; <i class="fa fa-search" aria-hidden="true"></i></button>-->
+      </div>
       <div class="addDiv">
-        <button id='addBook'class="btn btn-primary" type="button" name="button">Add Book</button>
+        <button id='addBook' class="btn btn-primary" type="button" name="button">Add Book</button>
         <!--  <label for="addBook"></label> -->
         <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
         <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value="" />
       </div>
       <div>
-        <button id="viewBtn" class="btn btn-success" type="button" name="button">View Books</button>
+        <button id="viewBtn" class="btn btn-success" type="button" name="button">Show Booklist</button>
       </div>
-      <div id="viewDiv">
+      <div id="viewDiv" class="hidden">
 
       </div>
-      <div id="id">Vad finns här</div>
-
+      <div id="id">Vad finns här...
+      </div>
       <div class="error">
         <h5 class="error-message">API Fetch - Information </h5>
       </div>
