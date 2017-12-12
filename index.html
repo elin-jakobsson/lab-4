@@ -166,8 +166,8 @@
                 `<div class="bookEx">
                   <ul>
                   <li> <img src=${img} alt="img not found"> </li>
-                  <li> Title: <span id='title'>${json.items[i].volumeInfo.title}</span> </li>
-                  <li> Author: <span id='author'> ${json.items[i].volumeInfo.authors} </span></li>
+                  <li> Title: ${json.items[i].volumeInfo.title}</li>
+                  <li> Author: ${json.items[i].volumeInfo.authors}</li>
                   </ul>
                   <button class="btn btn-primary addBtn">Select Book</button>
                   </div>`;
@@ -180,9 +180,10 @@
                 if (keyAdd == undefined) {
                   alert('You have to request a key before you can add book to your book sekection');
                 } else {
-                  let title = event.target.previousElementSibling.children[1].firstElementChild.innerText;
+
+                  let title = event.target.previousElementSibling.children[1].innerText;
                   console.log(title);
-                  let author = event.target.previousElementSibling.children[2].firstElementChild.innerText;
+                  let author = event.target.previousElementSibling.children[2].innerText;
                   console.log(author);
                   event.target.parentElement.style.border = '2px solid green';
                   let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + title + "&author=" + author;
@@ -199,74 +200,10 @@
           });
       });
 
-      // JavaScript for both school api and google
-      function googleBook(title) {
-        let url = "https://www.googleapis.com/books/v1/volumes?q=" + title;
-        console.log(url);
-
-        fetch(url)
-          .then(function(response) {
-            return response.json()
-          }, function(fail) {
-            fails += 1;
-            failMessage = ` <p> Google API-fetch fail Nr: ${fails} - message: soemthing went wrong</p> `
-            errorMessage.innerHTML += failMessage;
-
-          }).then(function(json) {
-            console.log(json);
-            output.innerHTML = '';
-            bookTest = '';
-            //googleBooksList = json.items;
-            for (var i = 0; i < json.items.length; i++) {
-              let img = json.items[i].volumeInfo.imageLinks.thumbnail;;
-
-              bookTest +=
-                `<div class="bookEx">
-                  <ul>
-                  <li> <img src=${img} alt="img not found"> </li>
-                  <li> Title: <span id='title'>${json.items[i].volumeInfo.title}</span> </li>
-                  <li> Author: <span id='author'> ${json.items[i].volumeInfo.authors} </span></li>
-                  </ul>
-                  <button class="btn btn-primary addBtn">Select Book</button>
-                  </div>`;
-            }
-            output.innerHTML = bookTest;
-            let btnList = document.getElementsByClassName('addBtn');
-            console.log(btnList);
-            for (var i = 0; i < btnList.length; i++) {
-              btnList[i].addEventListener('click', function(event) {
-                if (keyAdd == undefined) {
-                  alert('You have to request a key before you can add book to your book sekection');
-                } else {
-                  let title = event.target.previousElementSibling.children[1].firstElementChild.innerText;
-                  console.log(title);
-                  let author = event.target.previousElementSibling.children[2].firstElementChild.innerText;
-                  console.log(author);
-                  event.target.parentElement.style.border = '2px solid green';
-                  let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + title + "&author=" + author;
-                  console.log(urlAdd);
-                  getAjax(urlAdd, addBook);
-                  event.target.disabled = true;
-                }
-
-              })
-            }
-          }).catch((error) => {
-            console.log(error);
-            output.innerHTML = 'Sorry! Our book api was not able to fetch your book. Please try another search.';
-          });
-      }
-
-
-
-
 
       // JavaScript for school api
 
-
-
       document.getElementById("viewBtn").disabled = true;
-      //document.getElementById("addBtn").disabled = true;
 
       function getAjax(url, callback, num = 0) {
         let exe = function(success, fail) {
@@ -307,12 +244,7 @@
 
 
       document.getElementById('requestKey').addEventListener("click", getKey);
-      /*  document.getElementById('addBook').addEventListener('click', (event) => {
-          let urlAdd = "https://www.forverkliga.se/JavaScript/api/crud.php?op=insert" + "&key=" + keyAdd + "&title=" + titleAdd.value + "&author=" + authorAdd.value;
 
-          getAjax(urlAdd, addBook);
-
-        });*/
       viewBtn.addEventListener("click", (event) => {
         if (viewDiv.className === 'hidden') {
           viewDiv.setAttribute('class', 'show')
@@ -323,19 +255,6 @@
         }
 
       });
-
-
-      viewDiv.addEventListener('load', function(event) {
-
-
-        if (viewDiv.children.length > 0) {
-
-
-
-
-
-
-
 
           //let changeBtn = document.getElementById('changeBook');
           /*  viewDiv.children.addEventListener('click', function(event) {
@@ -354,26 +273,6 @@
               }
               console.log(span);
             });*/
-
-        } else {
-          console.log('viewDiv is empty');
-        }
-      });
-
-
-
-      /*var divs = document.getElementById("viewDiv").children;
-        for (var i = 0; i < divs.length; i++) {
-          divs[].addEventListener('click', (event)=>{
-            console.log(this.innerText);
-          })
-
-        }
-
-
-
-      })*/
-
 
       function getKey() {
         fetch("https://www.forverkliga.se/JavaScript/api/crud.php?requestKey")
@@ -402,34 +301,50 @@
             `<div class="bookSaved">
               <ul>
               <li> <img src=${imgList[i]} alt="img not found"> </li>
-              <li> Title: <span id='title'>${obj.data[i].title}</span> </li>
-              <li> Author: <span id='author'> ${obj.data[i].author} </span></li>
-              <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
+              <li> Title: <span class='spanBooks' id='title'>${obj.data[i].title}</span> </li>
+              <li> Author: <span class='spanBooks' id='author'> ${obj.data[i].author} </span></li>
+              <li> updated: id='updated'> ${obj.data[i].updated} </span></li>
               <li> Id: <span id='idNr'> ${obj.data[i].id} </span></li>
               </ul>
-              <button class="btn btn-danger deleteBtn">Delete</button>
+              <button id='${obj.data[i].id}' class="btn btn-danger deleteBtn">Delete</button>
               </div>`;
         }
         viewDiv.innerHTML = savedOutput;
         let deleteBtnList = document.getElementsByClassName('deleteBtn');
-        console.log(deleteBtnList);
+        let spanBooks = document.getElementsByClassName('spanBooks');
+
         for (var i = 0; i < deleteBtnList.length; i++) {
           deleteBtnList[i].addEventListener('click', function(event) {
             if (keyAdd == undefined) {
               alert('You have to request a key before you can add book to your book sekection');
             } else {
-                
-              event.target.disabled = true;
+              let deleteUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + event.target.id;
+              getAjax(deleteUrl, function(obj){
+                let node = event.target.parentElement;
+                let parent = event.target.parentElement.parentElement;
+                parent.removeChild(node);
+              });
             }
-
           })
-
         }
-      }
 
-      function deleteFunction(obj) {
+        console.log('spanlist ', spanBooks.length);
+        for (var i = 0; i < spanBooks.length; i++) {
+          spanBooks[i].addEventListener('click', function(event) {
+            if (keyAdd == undefined) {
+              alert('You have to request a key before you can add book to your book sekection');
+            } else {
+              console.log(spanBooks[i]);
+              /*let newInput = document.createElement('input');
+              newInput.className = 'testInput';
+              newInput.setAttribute('value', '');
+              newInput.setAttribute('placeholder', 'new input');
+            spanBooks[i].parentElement.replaceChild(newInput,spanBooks[i]);*/
+              }
+            })
+          }
+        }
 
-      }
 
 
 
@@ -476,24 +391,13 @@
 
       <div class="googleBooks">
         <h4>Add a book from Google Books</h4>
-        <input id="input" type="text" placeholder="Search for a book title" value="" />
+        <input id="input" type="text" placeholder="Search Title or Author..." value="" />
         <button id="addGoogleBtn" class="btn btn-primary" type="button" name="button"><i class="fa fa-search" aria-hidden="true"></i></button>
         <br/>
         <div id="output" title="Add to the list">
         </div>
       </div>
 
-      <!--<div class="search">
-        <input type="text" id="searchTitle" placeholder="Search title..">
-        <input type="text" id="searchAuthor" placeholder="Search author..">
-        <button id="searchBtn" class="btn btn-primary" type="button" name="button">Search &nbsp; <i class="fa fa-search" aria-hidden="true"></i></button>
-      </div>-->
-      <div class="addDiv">
-        <button id='addBook' class="btn btn-primary" type="button" name="button">Add Book</button>
-        <!--  <label for="addBook"></label> -->
-        <input id="addTitle" type="text" name="addTitle" placeholder="Title" value="" />
-        <input id="addAuthor" type="text" name="addAuthor" placeholder="Author" value="" />
-      </div>
       <div>
         <button id="viewBtn" class="btn btn-success" type="button" name="button">Show Booklist</button>
       </div>
