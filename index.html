@@ -141,6 +141,9 @@
       let bookId;
       let bookImg;
 
+
+
+
       //JavaScript for google api
       let button = document.getElementById("addGoogleBtn");
       let input = document.getElementById("input");
@@ -358,6 +361,38 @@
         let deleteBtnList = document.getElementsByClassName('deleteBtn');
         let spanBooks = document.getElementsByClassName('spanBooks');
 
+//Function for change author and book title
+        let authorSpan = document.getElementById("author");
+        console.log(authorSpan)
+        let titleSpan = document.getElementById("title");
+
+        let newInputAuthor = document.createElement("input");
+        newInputAuthor.className = "newInput";
+        let newInputTitle= document.createElement("input");
+        newInputTitle.className = "newInput";
+
+          authorSpan.addEventListener("click", function(event){
+            event.target.parentNode.replaceChild(newInputAuthor, event.target);
+            newInputAuthor.focus();
+          });
+
+           titleSpan.addEventListener("click", function(event){
+            event.target.parentNode.replaceChild(newInputTitle, event.target);
+            newInputTitle.focus();
+          });
+
+          newInputAuthor.addEventListener("blur", function(event){
+            console.log(newInputAuthor.value);
+            authorSpan.innerText = newInputAuthor.value;
+            event.target.parentNode.replaceChild(authorSpan,newInputAuthor);
+          });
+          newInputTitle.addEventListener("blur", function(event){
+            console.log(newInputTitle.value);
+            titleSpan.innerText = newInputTitle.value;
+            event.target.parentNode.replaceChild(titleSpan,newInputTitle);
+          });
+
+      
         for (var i = 0; i < deleteBtnList.length; i++) {
           deleteBtnList[i].addEventListener('click', function(event) {
             if (keyAdd == undefined) {
@@ -378,21 +413,22 @@
           })
         }
 
-        console.log('spanlist ', spanBooks.length);
+      /*  console.log('spanlist ', spanBooks.length);
         for (var i = 0; i < spanBooks.length; i++) {
           spanBooks[i].addEventListener('click', function(event) {
             if (keyAdd == undefined) {
               alert('You have to request a key before you can add book to your book sekection');
             } else {
               console.log(spanBooks[i]);
-              /*let newInput = document.createElement('input');
+              let newInput = document.createElement('input');
               newInput.className = 'testInput';
               newInput.setAttribute('value', '');
               newInput.setAttribute('placeholder', 'new input');
-            spanBooks[i].parentElement.replaceChild(newInput,spanBooks[i]);*/
+              console.log(newInput.value);
+              //spanBooks[i].parentElement.replaceChild(newInput,spanBooks[i]);
             }
           })
-        }
+        }*/
       }
 
 
@@ -417,8 +453,6 @@
             })
         };
       };*/
-
-
 
 
 
