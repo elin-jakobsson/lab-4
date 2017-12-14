@@ -367,7 +367,7 @@
         }
         viewDiv.innerHTML = savedOutput;
 
-<<<<<<< HEAD
+
         // Delete Button
         let deleteList = document.getElementsByClassName('deleteBtn');
         let inputChange = document.getElementsByClassName('bookSaved');
@@ -389,67 +389,11 @@
           });
         }
 
-        //console.log('spanlist ', spanBooks.length);
+   //console.log('spanlist ', spanBooks.length);
         console.log(spanBooks[0]);
-=======
-//Function for change author and book title
-        let authorSpan = document.getElementById("author");
-        console.log(authorSpan)
-        let titleSpan = document.getElementById("title");
-
-        let newInputAuthor = document.createElement("input");
-        newInputAuthor.className = "newInput";
-        let newInputTitle= document.createElement("input");
-        newInputTitle.className = "newInput";
-
-          authorSpan.addEventListener("click", function(event){
-            event.target.parentNode.replaceChild(newInputAuthor, event.target);
-            newInputAuthor.focus();
-          });
-
-           titleSpan.addEventListener("click", function(event){
-            event.target.parentNode.replaceChild(newInputTitle, event.target);
-            newInputTitle.focus();
-          });
-
-          newInputAuthor.addEventListener("blur", function(event){
-            console.log(newInputAuthor.value);
-            authorSpan.innerText = newInputAuthor.value;
-            event.target.parentNode.replaceChild(authorSpan,newInputAuthor);
-          });
-          newInputTitle.addEventListener("blur", function(event){
-            console.log(newInputTitle.value);
-            titleSpan.innerText = newInputTitle.value;
-            event.target.parentNode.replaceChild(titleSpan,newInputTitle);
-          });
-
-      
-        for (var i = 0; i < deleteBtnList.length; i++) {
-          deleteBtnList[i].addEventListener('click', function(event) {
-            if (keyAdd == undefined) {
-              alert('You have to request a key before you can add book to your book sekection');
-            } else {
-              let deleteUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + event.target.id;
-              getAjax(deleteUrl, function(obj) {
-
-                let index = imgList.indexOf(event.target.previousElementSibling.children[0].firstElementChild.src);
-                if (index > -1) {
-                  imgList.splice(index, 1);
-                }
-                let node = event.target.parentElement;
-                let parent = event.target.parentElement.parentElement;
-                parent.removeChild(node);
-              });
-            }
-          })
-        }
-
-      /*  console.log('spanlist ', spanBooks.length);
->>>>>>> 95631b203f4ed4ad34f006ec6605e367cb3c06a6
         for (var i = 0; i < spanBooks.length; i++) {
             console.log(spanBooks[0]);
           spanBooks[i].addEventListener('click', function(event) {
-<<<<<<< HEAD
 
             //console.log(event.target);
             //event.target.style.fontWeight = 'bold';
@@ -463,66 +407,11 @@
 
           })  
         }
-=======
-            if (keyAdd == undefined) {
-              alert('You have to request a key before you can add book to your book sekection');
-            } else {
-              console.log(spanBooks[i]);
-              let newInput = document.createElement('input');
-              newInput.className = 'testInput';
-              newInput.setAttribute('value', '');
-              newInput.setAttribute('placeholder', 'new input');
-              console.log(newInput.value);
-              //spanBooks[i].parentElement.replaceChild(newInput,spanBooks[i]);
-            }
-          })
-        }*/
->>>>>>> 95631b203f4ed4ad34f006ec6605e367cb3c06a6
       }
 
+        
+        
 
-
-
-    //let changeBtn = document.getElementById('changeBook');
-    /*  viewDiv.children.addEventListener('click', function(event) {
-        console.log(viewDiv.children);
-
-        let spans = document.getElementsByClassName('spanToInput');
-        console.log(spans);
-        let inputValu = '';
-        for (var i = 0; i < spans.length; i++) {
-          span = spans[i];
-          let input = document.createElement('input');
-          input.className = 'testInput';
-          input.setAttribute('value', inputValu);
-          input.setAttribute('placeholder', span.innerText);
-          span.parentNode.replaceChild(input, span);
-        }
-        console.log(span);
-      });*/
-
-
-
-
-    /*function changeBook() {
-      let exe = function(success, fail) {
-
-
-      };
-
-        let url = "https://www.forverkliga.se/JavaScript/api/crud.php?op=update" + "&key=" + keyAdd + "&id=" + book.id + "&title=" + book.title + "&author=" + book.author;
-
-        fetch(url)
-          .then((response) => response.json())
-          .then((result) => {
-            if (result.status !== "success") {
-              fail(result);
-            } else {
-              success(result);
-            }
-          })
-      };
-    };*/
 
 
 
