@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+
+}
+
+header {
+  height: 20vh;
+  width: 100vw;
+  background-color: powderBlue;
+  text-align: center;
+  font-family: monospace;
+}
+
+header>h1 {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+body {
+  background-color: #f4f4f4;
+  margin: auto;
+}
+
+img {
+  width: 120px;
+}
+
+img#bookLogo {
+  width: 50px;
+}
+.clickMe{
+  display: inline;
+  background-color: hotpink;
+}
+
+.container div,
+.container>button {
+  display: block;
+  margin: 10px;
+  padding: 5px;
+  left: 30px;
+
+}
+
+#output {
+  cursor: pointer;
+
+  width: 100%
+}
+
+.bookEx {
+  float: left;
+  display: inline-block;
+  text-align: center;
+  width: 30%;
+
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.bookEx>* {
+
+  list-style-type: none;
+}
+
+.bookSaved {
+  display: inline-block;
+  text-align: center;
+  width: 40%;
+
+  margin: 10px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.bookSaved>* {
+
+  list-style-type: none;
+}
+
+#viewDiv.hidden {
+  display: none;
+  width: 100%;
+}
+
+#viewDiv.show {
+  display: block;
+  width: 100%;
+}
+
+#viewDiv>div {
+  background-color: white;
+  border-radius: 10px;
+  /*width: 100%;*/
+  margin: 5px 0;
+  padding: 10px;
+
+}
+
+#viewDiv ul {
+  list-style: none;
+}
+
+.changeDiv {
+  text-align: right;
+  margin: 10px;
+}
+
+.error {
+
+  max-height: 200px;
+  width: 100%;
+  bottom: 0px;
+
+  overflow: auto;
+  background-color: lightgray;
+  padding: 30px;
+  border-radius: 10px;
+}
