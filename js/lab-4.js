@@ -272,6 +272,8 @@ window.addEventListener("load", function(event) {
         parent.replaceChild(newInput,parent.children[1])
         parent.replaceChild(newInputTwo,parent.children[2])
 
+        
+
         /*console.log(event.target.previousElementSibling.parentElement);
         let parent = event.target.previousElementSibling.parentElement;
         for (var i = 0; i < parent.children.length; i++) {
