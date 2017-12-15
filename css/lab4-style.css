@@ -98,8 +98,8 @@ img.bookLogo {
   overflow: auto;
 }
 #viewDiv.show>.bookSaved{
-  width: 250px;
-  max-width: 250px;
+  width: 300px;
+  max-width: 300px;
   align-self: flex-start;
   text-align: center;
 
@@ -124,6 +124,12 @@ img.bookLogo {
 }
 .bookSaved>* {
   list-style-type: none;
+}
+.bookSaved>ul>li.spanBooks:hover{
+  font-weight: bold;
+}
+.bookSaved>ul>li>span.spanBooks:hover{
+  font-weight: lighter;
 }
 
 #viewDiv.hidden {
@@ -174,18 +180,4 @@ img.bookLogo {
   background-color: lightgray;
   padding: 30px;
   border-radius: 10px;
-}
-blockquote{
-  background-color: #FFFFFF;
-  margin: 10px;
-  padding: 15px;
-  text-align: center;
-}
-blockquote p:before {
-  content: open-quote;
-  font-weight: bold;
-}
-blockquote p:after {
-  content: close-quote;
-  font-weight: bold;
 }

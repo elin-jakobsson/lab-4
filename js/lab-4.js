@@ -146,7 +146,7 @@ window.addEventListener("load", function(event) {
           } else {
             success(result);
           }
-        });
+        }).catch((error)=> console.log(error));
     };
     let promise = new Promise(exe);
     promise.then(function(success) {
@@ -213,10 +213,10 @@ window.addEventListener("load", function(event) {
       savedOutput +=
         `
          <div class="bookSaved">
-           <ul>
+           <ul class='ulList'>
            <li> <img class='bookLogo' src='book-logo.png' alt="img not found"/> </li>
-           <li class='spanBooks'> Title: ${obj.data[i].title}</li>
-           <li class='spanBooks'> Author: ${obj.data[i].author}</li>
+           <li class='spanBooks'>Title: <span class='span1'>${obj.data[i].title}</span></li>
+           <li class='spanBooks'>Author: <span  class='span1'>${obj.data[i].author}</span></li>
            <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
            <li> Id: <span> ${obj.data[i].id} </span></li>
            </ul>
@@ -230,9 +230,16 @@ window.addEventListener("load", function(event) {
 
     // Delete Button
     let deleteList = document.getElementsByClassName('deleteBtn');
-    let inputChange = document.getElementsByClassName('bookSavedContainer');
+    let inputChange = document.getElementsByClassName('bookSaved');
     let spanBooks = document.getElementsByClassName('spanBooks');
-  //  let ulParent;
+    let inputList;
+    let newInput;
+    let newSpan;
+    let changeId;
+
+    let inputAuthor;
+    let inputTitle;
+
     console.log('deleteList ' + deleteList.length);
     for (var i = 0; i < deleteList.length; i++) {
 
@@ -249,60 +256,81 @@ window.addEventListener("load", function(event) {
       });
     }
 
-//console.log('spanlist ', spanBooks.length);
-    console.log(spanBooks[0]);
     for (var i = 0; i < spanBooks.length; i++) {
-        console.log(spanBooks[0]);
       spanBooks[i].addEventListener('click', function(event) {
-        let parent = event.target.previousElementSibling.parentElement;
-        //console.log(event.target);
-        //event.target.style.fontWeight = 'bold';
-        let newInput = document.createElement('input');
-        newInput.className = 'newInput';
+        let parent;
+        console.log(event.target.parentElement.nextElementSibling.id);
+        changeId = event.target.parentElement.nextElementSibling.id;
+
+        newInput = document.createElement('input');
+        newInput.className = 'input1';
         newInput.setAttribute('value', '');
-        newInput.setAttribute('placeholder', parent.children[1].innerText);
+        newInput.setAttribute('type', 'text');
+        newInput.setAttribute('placeholder', 'Titel');
 
-        let newInputTwo = document.createElement('input');
-        newInputTwo.className = 'newInput';
+        newInputTwo = document.createElement('input');
+        newInputTwo.className = 'input1';
         newInputTwo.setAttribute('value', '');
-        newInputTwo.setAttribute('placeholder', parent.children[2].innerText);
+        newInputTwo.setAttribute('type', 'text');
+        newInputTwo.setAttribute('placeholder', 'Author');
 
-        //let testList = [newInput,newInputTwo];
+        if (event.target.className === 'spanBooks') {
+          parent = event.target.parentElement;
 
-        parent.replaceChild(newInput,parent.children[1])
-        parent.replaceChild(newInputTwo,parent.children[2])
+          parent.children[1].replaceChild(newInput, parent.children[1].firstElementChild);
+          parent.children[2].replaceChild(newInputTwo, parent.children[2].firstElementChild);
 
-        
+          inputList = document.getElementsByClassName('input1');
 
-        /*console.log(event.target.previousElementSibling.parentElement);
-        let parent = event.target.previousElementSibling.parentElement;
-        for (var i = 0; i < parent.children.length; i++) {
-            console.log('inside loop 1');
-            if (parent.children[i].className == 'spanBooks') {
-              console.log('inside if spanBooks');
-              for (var j = 0; j < testList.length; j++) {
-                console.log('inside loop 2');
-                console.log();
-                  parent.replaceChild(testList[j],parent.children[i])
+
+          for (var i = 0; i < inputList.length; i++) {
+            //event.preventDefault();
+            inputList[i].addEventListener('change', function(event) {
+
+              newSpan = document.createElement('span');
+              newSpan.className = 'span2';
+              newSpan.innerHTML = event.target.value;
+              event.target.parentElement.replaceChild(newSpan, event.target);
+
+              let changedItems = document.getElementsByClassName('span2');
+
+              console.log(changedItems);
+              if (changedItems.length == 2) {
+                inputTitle = changedItems[0];
+                console.log(inputTitle);
+                console.log(inputAuthor);
+                inputAuthor = changedItems[1];
+                let changeUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?opop=update" + "&key=" + keyAdd + "&id=" + changeId + '&title=' + inputTitle + '&author=' + inputAuthor;
+                getAjax(changeUrl, function(obj) {
+                  console.log(obj);
+                });
               }
-            }
-            //parent.replaceChild(newInputTwo,parent.children[i])
-            //parent.appendChild(newInput);
+            });
+          }
+
+        } else if (event.target.className !== 'spanBooks') {
+          event.preventDefault();
+          /*parent = event.target.parentElement;
+          parent.children[1].replaceChild(newInput,parent.children[1].firstElementChild);
+          parent.children[2].replaceChild(newInputTwo,parent.children[2].firstElementChild);*/
         }
 
-
-
-
-        /*if (event.target.previousElementSibling.className == 'spanBooks') {
-          console.log('previous is true');
-          console.log(event.target.previousElementSibling.parentElement);
-          event.target.parentElement.replaceChild(newInputTwo,event.target)
-          event.target.previousElementSibling.parentElement.replaceChild(newInput,event.target.previousElementSibling)
-        }*/
-        //event.target.parentElement.replaceChild(newInput,event.target)
-
       })
+
+
+
+
+
     }
+
+
+
+
+
+
+
+
+
   }
 
 
