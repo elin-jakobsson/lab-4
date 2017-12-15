@@ -211,23 +211,26 @@ window.addEventListener("load", function(event) {
     for (var i = 0; i < obj.data.length; i++) {
 
       savedOutput +=
-        `<div class="bookSaved">
-          <ul>
-          <li> <img class='bookLogo' src='book-logo.png' alt="img not found"/> </li>
-          <li class='spanBooks'> Title: ${obj.data[i].title}</li>
-          <li class='spanBooks'> Author: ${obj.data[i].author}</li>
-          <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
-          <li> Id: <span> ${obj.data[i].id} </span></li>
-          </ul>
-          <button id='${obj.data[i].id}' class="btn btn-danger deleteBtn">Delete</button>
-          </div>`;
+        `
+         <div class="bookSaved">
+           <ul>
+           <li> <img class='bookLogo' src='book-logo.png' alt="img not found"/> </li>
+           <li class='spanBooks'> Title: ${obj.data[i].title}</li>
+           <li class='spanBooks'> Author: ${obj.data[i].author}</li>
+           <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
+           <li> Id: <span> ${obj.data[i].id} </span></li>
+           </ul>
+           <button id='${obj.data[i].id}' class="btn btn-danger deleteBtn">Delete</button>
+           </div>
+
+          `;
     }
     viewDiv.innerHTML = savedOutput;
 
 
     // Delete Button
     let deleteList = document.getElementsByClassName('deleteBtn');
-    let inputChange = document.getElementsByClassName('bookSaved');
+    let inputChange = document.getElementsByClassName('bookSavedContainer');
     let spanBooks = document.getElementsByClassName('spanBooks');
   //  let ulParent;
     console.log('deleteList ' + deleteList.length);
@@ -251,16 +254,50 @@ window.addEventListener("load", function(event) {
     for (var i = 0; i < spanBooks.length; i++) {
         console.log(spanBooks[0]);
       spanBooks[i].addEventListener('click', function(event) {
-
+        let parent = event.target.previousElementSibling.parentElement;
         //console.log(event.target);
         //event.target.style.fontWeight = 'bold';
         let newInput = document.createElement('input');
         newInput.className = 'newInput';
         newInput.setAttribute('value', '');
-        newInput.setAttribute('placeholder', event.target.innerText);
+        newInput.setAttribute('placeholder', parent.children[1].innerText);
 
-        console.log(spanBooks[i]);
-        event.target.parentElement.replaceChild(newInput,event.target)
+        let newInputTwo = document.createElement('input');
+        newInputTwo.className = 'newInput';
+        newInputTwo.setAttribute('value', '');
+        newInputTwo.setAttribute('placeholder', parent.children[2].innerText);
+
+        //let testList = [newInput,newInputTwo];
+
+        parent.replaceChild(newInput,parent.children[1])
+        parent.replaceChild(newInputTwo,parent.children[2])
+
+        /*console.log(event.target.previousElementSibling.parentElement);
+        let parent = event.target.previousElementSibling.parentElement;
+        for (var i = 0; i < parent.children.length; i++) {
+            console.log('inside loop 1');
+            if (parent.children[i].className == 'spanBooks') {
+              console.log('inside if spanBooks');
+              for (var j = 0; j < testList.length; j++) {
+                console.log('inside loop 2');
+                console.log();
+                  parent.replaceChild(testList[j],parent.children[i])
+              }
+            }
+            //parent.replaceChild(newInputTwo,parent.children[i])
+            //parent.appendChild(newInput);
+        }
+
+
+
+
+        /*if (event.target.previousElementSibling.className == 'spanBooks') {
+          console.log('previous is true');
+          console.log(event.target.previousElementSibling.parentElement);
+          event.target.parentElement.replaceChild(newInputTwo,event.target)
+          event.target.previousElementSibling.parentElement.replaceChild(newInput,event.target.previousElementSibling)
+        }*/
+        //event.target.parentElement.replaceChild(newInput,event.target)
 
       })
     }
