@@ -1,27 +1,37 @@
 * {
   margin: 0;
   padding: 0;
-
 }
-
 header {
-  height: 20vh;
-  width: 100vw;
-  background-color: powderBlue;
+  height: 200px;
+  background-color:#729f98;
   text-align: center;
   font-family: monospace;
 }
 
-header>h1 {
+header  h1 {
   position: relative;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  font-family: 'Noto Serif', serif;
+  color: #FFFFFF;
+}
+
+#welcome{
+  text-align: center;
+  position: relative;
+  margin: 10px;
+  padding: 15px;
+  color:#729f98;
 }
 
 body {
-  background-color: #f4f4f4;
   margin: auto;
+  background-color: #f6f1ed;
+}
+button{
+  margin: 10px;
 }
 
 img {
@@ -31,39 +41,28 @@ img {
 img#bookLogo {
   width: 50px;
 }
-.clickMe{
-  display: inline;
-  background-color: hotpink;
-}
 
 .container div,
 .container>button {
   display: block;
-  margin: 10px;
+  /*margin: 10px;
   padding: 5px;
-  left: 30px;
-
+  left: 30px;*/
 }
 
-#output {
-  cursor: pointer;
-
-  width: 100%
-}
 
 .bookEx {
+  position:relative;
   float: left;
   display: inline-block;
   text-align: center;
   width: 30%;
-
   margin: 10px;
   background-color: white;
   border-radius: 10px;
 }
 
 .bookEx>* {
-
   list-style-type: none;
 }
 
@@ -71,14 +70,12 @@ img#bookLogo {
   display: inline-block;
   text-align: center;
   width: 40%;
-
   margin: 10px;
   background-color: white;
   border-radius: 10px;
 }
 
 .bookSaved>* {
-
   list-style-type: none;
 }
 
@@ -94,11 +91,9 @@ img#bookLogo {
 
 #viewDiv>div {
   background-color: white;
-  border-radius: 10px;
-  /*width: 100%;*/
-  margin: 5px 0;
-  padding: 10px;
-
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 10px;
 }
 
 #viewDiv ul {
@@ -111,11 +106,9 @@ img#bookLogo {
 }
 
 .error {
-
   max-height: 200px;
   width: 100%;
   bottom: 0px;
-
   overflow: auto;
   background-color: lightgray;
   padding: 30px;
