@@ -215,8 +215,8 @@ window.addEventListener("load", function(event) {
          <div class="bookSaved">
            <ul class='ulList'>
            <li> <img class='bookLogo' src='book-logo.png' alt="img not found"/> </li>
-           <li class='spanBooks'>Title: <span class='span1'>${obj.data[i].title}</span></li>
-           <li class='spanBooks'>Author: <span  class='span1'>${obj.data[i].author}</span></li>
+           <li class='spanBooks'>Title: <span class='tittle'>${obj.data[i].title}</span></li>
+           <li class='spanBooks'>Author: <span  class='author'>${obj.data[i].author}</span></li>
            <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
            <li> Id: <span> ${obj.data[i].id} </span></li>
            </ul>
@@ -259,8 +259,9 @@ window.addEventListener("load", function(event) {
     for (var i = 0; i < spanBooks.length; i++) {
       spanBooks[i].addEventListener('click', function(event) {
         let parent;
-        console.log(event.target.parentElement.nextElementSibling.id);
+        //console.log(event.target.parentElement.nextElementSibling.id);
         changeId = event.target.parentElement.nextElementSibling.id;
+
 
         newInput = document.createElement('input');
         newInput.className = 'input1';
@@ -285,7 +286,7 @@ window.addEventListener("load", function(event) {
 
           for (var i = 0; i < inputList.length; i++) {
             //event.preventDefault();
-            inputList[i].addEventListener('change', function(event) {
+            inputList[i].addEventListener('blur', function(event) {
 
               newSpan = document.createElement('span');
               newSpan.className = 'span2';
@@ -293,13 +294,13 @@ window.addEventListener("load", function(event) {
               event.target.parentElement.replaceChild(newSpan, event.target);
 
               let changedItems = document.getElementsByClassName('span2');
-
+              inputTitle = changedItems[0];
+              console.log(inputTitle);
+              console.log(inputAuthor);
+              inputAuthor = changedItems[1];
               console.log(changedItems);
               if (changedItems.length == 2) {
-                inputTitle = changedItems[0];
-                console.log(inputTitle);
-                console.log(inputAuthor);
-                inputAuthor = changedItems[1];
+
                 let changeUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?opop=update" + "&key=" + keyAdd + "&id=" + changeId + '&title=' + inputTitle + '&author=' + inputAuthor;
                 getAjax(changeUrl, function(obj) {
                   console.log(obj);
