@@ -10,6 +10,7 @@
   <title>Lab 4 | Welcome To The Library</title>
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
   <!--FONT Awsome-->
   <link href="resources/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet">
   <!--Css Egen-->
@@ -21,46 +22,37 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
-    <a class="navbar-brand" href="#">HOME</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent1">
 
-    </div>
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#navKeyRequest">Request API key</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#navAddBook">Add book</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#navAddGoogle">Search on Google Books</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#navShowBooks">View book list</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#navErrMess">Error messages</a>
-      </li>
-    </ul>
-  </nav>
+  <!--NAVIGATION-->
+  <div class="topnav" id="myTopnav">
+    <a href="#" class="active">Home</a>
+    <a href="#navKeyRequest">Request API key</a>
+    <a href="#navAddBook">Add book</a>
+    <a href="#navAddGoogle">Google search books</a>
+    <a href="#navShowBooks">View book list</a>
+    <a href="#navErrMess">Error messages</a>
+    <a href="javascript:void(0);" class="icon">&#9776;</a>
+  </div>
 
   <!--HEADER-->
   <header>
     <h1 id="start">Welcome! <br><small>Lab 4 by Elin &amp; Anna</small></h1>
   </header>
   <!--MAIN-->
-  <main id="navKeyRequest">
+  <span id="navKeyRequest"></span>
+  <main>
     <div class="container">
       <div id="welcome">
-        <h4>On this website you can search and create your own list of books that you choose by your own preferences. Either add the book title and author by yourself or find it with the Google Book search.</h4>
-        <hr id="navAddBook">
+        <h4>On this website you can search and create your own list of books that you choose by your own preferences.
+          <span id="navAddBook"></span>Either add the book title and author by yourself or find it with the Google Book search.</h4>
+        <hr>
       </div>
       <div class="requestDiv">
         <h4>To get started you first request an API key.</h4>
         <br>
+        <span id="navAddGoogle"></span>
         <button id="requestKey" class="btn btn-info" type="button" name="button">Request API key</button>
-        <p id="navAddGoogle">Received: <strong id="keyText"></strong></p>
+        <p>Received: <strong id="keyText"></strong></p>
       </div>
       <hr>
       <div class="user">
@@ -75,7 +67,7 @@
       </div>
       <hr>
       <div class="googleBooks">
-        <h4>Search for book from Google Books</h4>
+        <h4>Search for a book in the Google search library</h4>
         <input id="input" type="text" placeholder="Search Title or Author..." value="" />
         <button id="addGoogleBtn" class="btn btn-info" type="button" name="button"><i class="fa fa-search" aria-hidden="true"></i></button>
         <br/>
@@ -83,8 +75,9 @@
         </div>
       </div>
       <hr>
+      <span id="navShowBooks"></span>
       <div class="showBooks">
-        <h4 id="navShowBooks">See all selected books</h4>
+        <h4>See all selected books</h4>
         <button id="viewBtn" class="btn btn-success" type="button" name="button">Show Booklist</button>
       </div>
       <div id="viewDiv" class="hidden">
@@ -99,7 +92,7 @@
 
   <!--FOOTER-->
   <footer>
-
+    <p> Lab 4 by Elin and Anna, Copyright &copy; 2017 </p>
   </footer>
 
 </body>

@@ -1,5 +1,20 @@
 window.addEventListener("load", function(event) {
 
+// navbarNar
+
+document.querySelector('.icon').addEventListener('click', navFunction);
+
+function navFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "topnav";
+    }
+}
+
+
+
   // Startupp declared variables nad STARTsetting
 
   //HTML objects
@@ -11,13 +26,10 @@ window.addEventListener("load", function(event) {
 
   //Saving vaiables
   let fails = 0;
-  //let imgList = [];
   let img;
   let savedOutput;
-  //  let userOutput;
   let keyAdd;
   let bookId;
-  //let bookImg;
 
   //Default start on buttons etc.
   document.getElementById("viewBtn").disabled = true;
@@ -45,7 +57,7 @@ window.addEventListener("load", function(event) {
     let url = "https://www.googleapis.com/books/v1/volumes?q=" + input.value;
     let exe = function(success, fail) {
       if (input.value == '') {
-        alert('Please input some text before search')
+        alert('Please input some text before search');
       } else {
         fetch(url).then(handleErrors)
           .then(function(result) {
@@ -53,21 +65,20 @@ window.addEventListener("load", function(event) {
           }).catch(function(error) {
             console.log(error);
             output.innerHTML = `Failed to fetch, Your internet is mabye momentarly down, Please try again`;
-          })
+          });
       }
     }
     let googlePromise = new Promise(exe);
 
     // FETCH GOOGLE BOOK API
     googlePromise.then(function(success) {
-      console.log(success);
+      //console.log(success);
       return success;
     }, function(fail) {
       fails += 1;
       failMessage = ` <p> Google API-fetch fail Nr: ${fails} - message: Faild to fetch that book colection</p> `
       errorMessage.innerHTML += failMessage;
     }).then(function(json) {
-
       img = 'no_book_cover.jpg';
       output.innerHTML = '';
       bookTest = '';
@@ -112,7 +123,7 @@ window.addEventListener("load", function(event) {
       }
     }).catch((error) => {
       console.log(error);
-      output.innerHTML = 'Sorry! Our book api was not able to fetch your book. Please try another search.';
+      output.innerHTML = 'Sorry! The Google-book api was not able to fetch your book. Please try again or another search.';
     });
   }
 
@@ -135,7 +146,6 @@ window.addEventListener("load", function(event) {
 
 
   // JavaScript for school api
-
   function getAjax(url, callback, num = 0) {
     let exe = function(success, fail) {
       fetch(url)
@@ -146,19 +156,19 @@ window.addEventListener("load", function(event) {
           } else {
             success(result);
           }
-        }).catch((error)=> console.log(error));
+        }).catch((error) => console.log(error));
     };
     let promise = new Promise(exe);
     promise.then(function(success) {
-      console.log(success);
+    //  console.log(success);
       return success;
     }, function(fail) {
-      console.log(fail);
+    //  console.log(fail);
       fails += 1;
       failMessage = ` <p> API-fetch fail Nr: ${fails} - message: ${fail.message}</p> `
       errorMessage.innerHTML += failMessage;
       if (num <= 10) {
-        console.log(num);
+      //  console.log(num);
         getAjax(url, callback, num + 1);
       } else {
         alert(`The fetch failed more than 10 times - Fail message: ${fail.message}`);
@@ -182,17 +192,17 @@ window.addEventListener("load", function(event) {
         document.getElementById('keyText').innerHTML = dataKey.key;
         //document.getElementById("addBtn").disabled = false;
         keyAdd = dataKey.key;
-      }).catch((error) => console.log(error))
+      }).catch((error) => console.log(error));
   }
 
   // Display-Hide your Book Selection CSS-dependent
   viewBtn.addEventListener("click", (event) => {
     if (viewDiv.className === 'hidden') {
-      viewDiv.setAttribute('class', 'show')
-      viewBtn.innerHTML = 'Show Booklist';
-    } else {
-      viewDiv.setAttribute('class', 'hidden')
+      viewDiv.setAttribute('class', 'show');
       viewBtn.innerHTML = 'Hide Booklist';
+    } else {
+      viewDiv.setAttribute('class', 'hidden');
+      viewBtn.innerHTML = 'Show Booklist';
     }
   });
 
@@ -206,7 +216,7 @@ window.addEventListener("load", function(event) {
 
   //  Book Output
   function addToList(obj) {
-    console.log(obj.data.length);
+    //console.log(obj.data.length);
     savedOutput = '';
     for (var i = 0; i < obj.data.length; i++) {
 
@@ -215,14 +225,13 @@ window.addEventListener("load", function(event) {
          <div class="bookSaved">
            <ul class='ulList'>
            <li> <img class='bookLogo' src='book-logo.png' alt="img not found"/> </li>
-           <li class='spanBooks'>Title: <span class='tittle'>${obj.data[i].title}</span></li>
-           <li class='spanBooks'>Author: <span  class='author'>${obj.data[i].author}</span></li>
+           <li class='spanBooks'>Title: <span class='span1'>${obj.data[i].title}</span></li>
+           <li class='spanBooks'>Author: <span  class='span1'>${obj.data[i].author}</span></li>
            <li> updated: <span id='updated'> ${obj.data[i].updated} </span></li>
            <li> Id: <span> ${obj.data[i].id} </span></li>
            </ul>
            <button id='${obj.data[i].id}' class="btn btn-danger deleteBtn">Delete</button>
            </div>
-
           `;
     }
     viewDiv.innerHTML = savedOutput;
@@ -230,114 +239,86 @@ window.addEventListener("load", function(event) {
 
     // Delete Button
     let deleteList = document.getElementsByClassName('deleteBtn');
-    let inputChange = document.getElementsByClassName('bookSaved');
     let spanBooks = document.getElementsByClassName('spanBooks');
     let inputList;
-    let newInput;
-    let newSpan;
-    let changeId;
-
-    let inputAuthor;
-    let inputTitle;
-
-    console.log('deleteList ' + deleteList.length);
     for (var i = 0; i < deleteList.length; i++) {
 
       deleteList[i].addEventListener('click', function(event) {
-        console.log('removing = ' + event.target.id);
+        //console.log('removing = ' + event.target.id);
         let deleteGoogleUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?op=delete" + "&key=" + keyAdd + "&id=" + event.target.id;
         getAjax(deleteGoogleUrl, function(obj) {
           let node = event.target.parentElement;
           let parent = event.target.parentElement.parentElement;
           parent.removeChild(node);
-          console.log(event.target.id);
+        //  console.log(event.target.id);
         });
 
       });
     }
 
+    //Change and save Input
     for (var i = 0; i < spanBooks.length; i++) {
       spanBooks[i].addEventListener('click', function(event) {
+
         let parent;
-        //console.log(event.target.parentElement.nextElementSibling.id);
-        changeId = event.target.parentElement.nextElementSibling.id;
-
-
-        newInput = document.createElement('input');
+        let newInput = document.createElement('input');
         newInput.className = 'input1';
         newInput.setAttribute('value', '');
         newInput.setAttribute('type', 'text');
         newInput.setAttribute('placeholder', 'Titel');
 
-        newInputTwo = document.createElement('input');
+        let newInputTwo = document.createElement('input');
         newInputTwo.className = 'input1';
         newInputTwo.setAttribute('value', '');
         newInputTwo.setAttribute('type', 'text');
         newInputTwo.setAttribute('placeholder', 'Author');
 
-        if (event.target.className === 'spanBooks') {
-          parent = event.target.parentElement;
+        if (event.target.className == 'spanBooks') {
+          if (inputList == undefined || inputList.length < 1) {
+            parent = event.target.parentElement;
+            parent.children[1].replaceChild(newInput, parent.children[1].firstElementChild);
+            parent.children[2].replaceChild(newInputTwo, parent.children[2].firstElementChild);
 
-          parent.children[1].replaceChild(newInput, parent.children[1].firstElementChild);
-          parent.children[2].replaceChild(newInputTwo, parent.children[2].firstElementChild);
-
-          inputList = document.getElementsByClassName('input1');
+            inputList = document.getElementsByClassName('input1');
 
 
-          for (var i = 0; i < inputList.length; i++) {
-            //event.preventDefault();
-            inputList[i].addEventListener('blur', function(event) {
+            for (var i = 0; i < inputList.length; i++) {
+              inputList[i].addEventListener('blur', function(event) {
 
-              newSpan = document.createElement('span');
-              newSpan.className = 'span2';
-              newSpan.innerHTML = event.target.value;
-              event.target.parentElement.replaceChild(newSpan, event.target);
+                newSpan = document.createElement('span');
+                newSpan.className = 'span2';
+                newSpan.innerHTML = event.target.value;
+                event.target.parentElement.replaceChild(newSpan, event.target);
 
-              let changedItems = document.getElementsByClassName('span2');
-              inputTitle = changedItems[0];
-              console.log(inputTitle);
-              console.log(inputAuthor);
-              inputAuthor = changedItems[1];
-              console.log(changedItems);
-              if (changedItems.length == 2) {
+                let changedItems = document.getElementsByClassName('span2');
+                let inputTitle = changedItems[0];
+                let inputAuthor = changedItems[1];
 
-                let changeUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?opop=update" + "&key=" + keyAdd + "&id=" + changeId + '&title=' + inputTitle + '&author=' + inputAuthor;
-                getAjax(changeUrl, function(obj) {
-                  console.log(obj);
-                });
-              }
-            });
+                if (inputTitle !== undefined && inputAuthor !== undefined) {
+                  let changeId = inputTitle.parentElement.parentElement.nextElementSibling.id;
+
+                  inputTitle = inputTitle.innerText;
+                  inputAuthor = inputAuthor.innerText;
+
+                  let changeUrl = "https://www.forverkliga.se/JavaScript/api/crud.php?op=update" + "&key=" + keyAdd + "&id=" + changeId + '&title=' + inputTitle + '&author=' + inputAuthor;
+                  getAjax(changeUrl, function(obj) {
+                    let span2List = document.getElementsByClassName('span2');
+                    for (var i = 0; i < 2; i++) {
+                      span2List[0].className = 'span1';
+                    }
+                  });
+                }
+              });
+            }
+          }else if(inputList.length >= 2){
+            event.preventDefault();
           }
-
-        } else if (event.target.className !== 'spanBooks') {
+        } else{
           event.preventDefault();
-          /*parent = event.target.parentElement;
-          parent.children[1].replaceChild(newInput,parent.children[1].firstElementChild);
-          parent.children[2].replaceChild(newInputTwo,parent.children[2].firstElementChild);*/
         }
 
-      })
-
-
-
-
-
+      });
     }
-
-
-
-
-
-
-
-
-
-  }
-
-
-
-
-
-
+  } // addToList function end :)
 
 });
